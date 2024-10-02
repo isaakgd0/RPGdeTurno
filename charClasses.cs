@@ -1,55 +1,75 @@
 using System;
 using System.Threading;
 
-//classe do Main Character
-public class MC {
-  public string name {get; set;}
-  public int vd {get; set;}
-  public int att {get; set;}
-  public int def {get; set;}
-  public int defFinal;
-
-  //MÉTODO DE ATAQUE DO MAIN CHARACTER:
-  public void atacar(Enemy GoblinKing, int Dice){
-    int dano = (att * Dice);
-    GoblinKing.vdEnemy -= dano;
-    //evitando vd negativa:
-    if (GoblinKing.vdEnemy < 0) GoblinKing.vdEnemy = 0;
-
-
-    Console.WriteLine($"Você causou {dano} de dano no {GoblinKing.nmEnemy}!");
-    Thread.Sleep(2000);
-    Console.WriteLine($"Vida do {GoblinKing.nmEnemy}: {GoblinKing.vdEnemy}.");
-  }
-
-  //MÉTODO DE DEFESA DO MAIN CHARACTER:
-  public void defend(Enemy GoblinKing, int Dice){
-    int defFinal = (def * Dice);
-
-    Console.WriteLine("Você ergueu sua defesa.");
+public class Dados{
+  public int Dice = 0;
+  public void RollDice(){
+    Thread.Sleep(500);
+    Console.WriteLine("Dados Jogados... Tomara que caia um número alto...");
     Thread.Sleep(1000);
-    Console.WriteLine($"Sua defesa total é de {defFinal}. Se o {GoblinKing.nmEnemy} tirar um ataque menor que isso, você bloqueará o dano dele...");
+    Dice = new Random().Next(1, 20);
+    Console.WriteLine($"Caiu {Dice}.");
   }
 }
 
+//CLASSE DO MAIN CHARACTER:
+public class MC{
+  public string Name {get; set;}
+  public int Hp = 10000;
+  public int Attack = 25;
+  public int DefFinal = 0;
+  public int Defesa = 100;
+
+  //ATAQUE DO MC:
+  public void Atacar(Enemy GoblinKing, Dados Dices){
+    int Dano = Attack * Dices.Dice;
+    GoblinKing.HpEnemy -= Dano;
+
+    //VIDA NEGATIVA:
+    if (GoblinKing.HpEnemy < 0){
+      GoblinKing.HpEnemy = 0;
+    }
+
+    Thread.Sleep(1000);
+    Console.WriteLine($"Dano aplicado: {Dano};");
+    Thread.Sleep(1000);
+    Console.WriteLine($"Vida atual do Goblin King: {GoblinKing.HpEnemy};");
+  }
+
+  public void Defender(Dados Dices){
+    Console.WriteLine("Você ergueu sua defesa.\nQuando ele atacar, o dano vai ser reduzido!");
+    DefFinal = Defesa * Dices.Dice;
+  }
+}
+
+
+//CLASSE DO ENEMY:
 public class Enemy{
-  public string nmEnemy {get; set;}
-  public int vdEnemy {get; set;}
-  public int atEnemy {get; set;}
+  public string NameEnemy = "Rei Goblin";
+  public int HpEnemy = 10000;
+  public int AttEnemy = 500;
 
-  //MÉTODO DE ATAQUE DO ENEMY:
-  public void ataque(MC mainChar, int Dice){
-    
-    int atFinal = (atEnemy * Dice) - mainChar.defFinal;
+  //MÉTODOS:
+  public void GoblinAttack(MC mainChar, Dados Dices){
+    int DanoFinal = (AttEnemy * Dices.Dice) - mainChar.DefFinal;
 
-    mainChar.vd -= atFinal;
-    //Evitando vd negativa:
-    if (mainChar.vd < 0) mainChar.vd = 0;
+    if (DanoFinal < 0){
+      DanoFinal == 0;
+    }
 
-    Console.WriteLine($"Sua defesa: {mainChar.def}");
+    mainChar.Hp -= DanoFinal;
+
+    //EVITANDO VIDA NEGATIVA:
+    if (mainChar.Hp < 0){
+      mainChar.Hp = 0;
+    }
+
     Thread.Sleep(1000);
-    Console.WriteLine("Dano aplicado:" + atFinal);
+    Console.WriteLine($"Dano aplicado: {DanoFinal}");
     Thread.Sleep(1000);
-    Console.WriteLine($"Sua Vida restante: {mainChar.vd}");
+    Console.WriteLine($"Sua defesa: {mainChar.Defesa};");
+    Thread.Sleep(1000);
+    Console.WriteLine($"Sua vida atual: {mainChar.Hp}");
+    mainChar.DefFinal = 0;
   }
 }
