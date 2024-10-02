@@ -1,169 +1,163 @@
 using System;
 using System.Threading;
 
-class Program {
-  public static void Main (string[] args) {
+class Program{
+    public static void Main(string[] args){
+        //DECLARANDO O DADO:
+        int Dano = 0;
+        Dados Dices = new();
 
-    //DEFININDO O INIMIGO
-    Enemy GoblinKing = new Enemy();
-    GoblinKing.nmEnemy = "Rei Goblin";
-    GoblinKing.vdEnemy = 10000;
-    GoblinKing.atEnemy = 150;
-    
-    //Definindo os dados.
-    int Dice = 0;
-    
-    //Criação do Player
-    Console.WriteLine("Saudações, bravo cavaleiro! Como devo chamar-lhe?");
-    MC mainChar = new MC();
-    mainChar.vd = 10000;
-    
-    mainChar.name = Console.ReadLine();
-    Console.WriteLine(mainChar.name + "... É um belo nome!...");
+        //DEFININDO O ENEMY:
+        Enemy GoblinKing = new();
 
-    Console.WriteLine("Vamos definir o seu armamento.");
-    Console.WriteLine("Pressione qualquer tecla para jogar os dados...");
-    Console.ReadKey(); //Leitura da tecla pressionada.
-    Thread.Sleep(500);
-    
-    Console.WriteLine("Jogando os dados...");
-    Thread.Sleep(2000);
-    Dice = new Random().Next(15, 400);
+        // INÍCIO E CRIANÇÃO DO PLAYER:
+        MC mainChar = new();
 
-    //Definição do armamento
-    Console.WriteLine("Caiu " + Dice + ".");
-    if (Dice <= 50){
-      Console.WriteLine("Baixo. Você conta apenas com seus punhos...");
-    }
-    else if (Dice <= 120){
-      Console.WriteLine("Você tem uma adaga. Bem boa contra inimigos menores, e ágil!");
-    }
-    else if (Dice <= 220){
-      Console.WriteLine("Uma espada. Muito bom!");
-    }
-    else{
-      Console.WriteLine("Um machado! É pesado, mas é Muito Forte!");
-    }
-  
-    mainChar.att = Dice;
-    //Armamento definido
+        Console.ForegroundColor = ConsoleColor.Yellow;
+        Console.WriteLine("Saudações, Bravo Cavalheiro!");
+        Console.ResetColor();
+        Console.WriteLine("Como devo chamá-lo?");
 
-    //Definindo a defesa do Player
-    Console.WriteLine("Agora vamos jogar os dados para definir os seus níveis de defesa.");
-    Console.WriteLine("Pressione qualquer tecla para jogar os dados...");
-    Console.ReadKey(); //Leitura da tecla pressionada.
-    Thread.Sleep(500);
-    Console.WriteLine("Jogando os dados...");
-    Thread.Sleep(2000);
+        mainChar.Name = Console.ReadLine();
+        Console.WriteLine($"{mainChar.Name}... É um belo nome, forte!");
 
-    Dice = new Random().Next(200, 3000);
+        //DEFININDO O ARMAMENTO DO PLAYER:
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine("Vamos definir o seu armamento agora.");
+        Console.ResetColor();
 
-    Console.WriteLine("Caiu " + Dice + ".");
-    if (Dice <= 400){
-      Console.WriteLine("Vai só no braço mesmo...");
-    }
-    else if (Dice <= 1000){
-      Console.WriteLine("Um escudo bem feito. Vai servir!");
-    }
-    else if (Dice <= 2000){
-      Console.WriteLine("O famoso Escudo de Carvalho... Ótimo!");
-    }
-    else{
-      Console.WriteLine("Uma boa armadura e um escudo! Você está pronto para a batalha!");
-    }
-    mainChar.def = Dice;
-
-    Thread.Sleep(2000);
-    Console.WriteLine($"\nSua armadura e seu armamento estão definidos, {mainChar.name}. Sua vida é {mainChar.vd} por padrão.");
-
-
-    Thread.Sleep(2000);
-    Console.WriteLine($"Veja, {mainChar.name}, há um inimigo se aproximando! É o Rei Goblin! Você deve enfrentá-lo!");
-    Thread.Sleep(1000);
-    Console.WriteLine("Rei Goblin te desafia para um combate.\nAceitar?\nSim? Não?");
-    if (Console.ReadLine().ToLower() == "sim"){
-      Thread.Sleep(1000);
-      Console.WriteLine("A batalha vai começar! O Rei Goblin te dá a vantagem, o primeiro turno.");
-    }
-    else{
-      Thread.Sleep(2000);
-      Console.WriteLine("Você tentou fugir saindo de fininho, mas o Rei Goblin te encontrou. Você deve enfrentá-lo...!");
-    }
-    
-    
-    for (int i = 1; i >= 0; i++){
-      Console.WriteLine($"\n####### ROUND {i} #######");
-      Thread.Sleep(3000);
-      
-      //Vez do mainChar
-      Console.WriteLine("É o seu turno.");
-      Thread.Sleep(1000);
-      Console.WriteLine("Quer atacar ou bloquear?");
-
-      if (Console.ReadLine().ToLower() == "atacar"){
-        Thread.Sleep(2000);
-
-        Console.WriteLine("Vamos jogar os dados, então. Tomara que caia um bom número...");
-        Console.WriteLine("Pressione qualquer tecla para jogar os dados...");
+        Console.WriteLine("Pressione qualquer tecla para jogar os dados.");
         Console.ReadKey();
+        Dices.RollDice();
 
-        Thread.Sleep(2000);
-        Dice = new Random().Next(0, 20);
-        Console.WriteLine(Dice);
-        if (Dice == 0){
-          Console.WriteLine($"{GoblinKing.nmEnemy} se esquivou...");
+        Console.ForegroundColor = ConsoleColor.Cyan;
+        if (Dices.Dice <= 5){
+            Console.WriteLine("Baixo... Você conta apenas com os seus punhos...");
+        }
+        else if (Dices.Dice <= 12){
+            Console.WriteLine("Uma adaga... Deve servir...");
+        }
+        else if (Dices.Dice <= 15){
+            Console.WriteLine("Boa! Uma espada!");
+        }
+        else {
+            Console.WriteLine("Um machado duplo! É um pouco pesado, mas é MUITO forte!");
+        }
+        mainChar.Attack = mainChar.Attack * Dices.Dice;
+
+        //DEFININDO A DEFESA DO PLAYER:
+        Console.ResetColor();
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine("Vamos definir sua defesa, agora.");
+        Console.ResetColor();
+
+        Console.WriteLine("Pressione qualquer tecla para jogar os dados.");
+        Console.ReadKey();
+        Dices.RollDice();
+
+        Console.ForegroundColor = ConsoleColor.Cyan;
+        if (Dices.Dice <= 5){
+            Console.WriteLine("Quem precisa de defesa, né?");
+        }
+        else if(Dices.Dice <= 12){
+            Console.WriteLine("Um pedacinho de madeira deve servir...");
+        }
+        else if(Dices.Dice <= 15){
+            Console.WriteLine("Um escudo bem feito é bom!");
         }
         else{
-          mainChar.atacar(GoblinKing, Dice);
+            Console.WriteLine("Muito bom! Famoso escudo de carvalho!");
         }
-      }
-      else{
-        Thread.Sleep(1000);
-        Console.WriteLine($"Vamos jogar os dados para ver se você consegue bloquear o ataque do {GoblinKing.nmEnemy}.");
+        mainChar.Defesa = mainChar.Defesa * Dices.Dice;
+        Console.ResetColor();
+
+        //TUDO PRONTO PRA BATALHA:
         Thread.Sleep(2000);
-        Console.WriteLine("Pressione qualquer tecla para jogar os dados...");
-        Console.ReadKey();
-
-        Dice = new Random().Next(1, 20);
-        Console.WriteLine($"Caiu {Dice}...");
+        Console.WriteLine($"Tudo pronto. Sua vida é {mainChar.Hp} por padrão.");
         Thread.Sleep(2000);
-        mainChar.defend(GoblinKing, Dice);
-      }
 
-      Thread.Sleep(5000);
-      
-      //O Goblin King ainda está vivo?
-      if (GoblinKing.vdEnemy <= 0){
-        Console.WriteLine("Você venceu! O Rei Goblin está morto!");
-        break;
-      }
+        Console.WriteLine($"Olhe, {mainChar.Name}! Um inimigo!\n É o {GoblinKing.NameEnemy}!");
+        Console.WriteLine("O que você faz agora?!\nQuer fugir ou atacar?");
+        string comando = Console.ReadLine().ToLower();
 
-      //Vez do Goblin King
-      Console.WriteLine("É a vez do Rei Goblin atacar...!");
-      Thread.Sleep(1000);
-      Console.WriteLine("Ele vai jogar os dados...");
-      Thread.Sleep(2000);
-
-      Dice = new Random().Next(0, 20);
-      Console.WriteLine($"Ele tirou um {Dice}.");
-      Thread.Sleep(2000);
-
-      int attFinal = (GoblinKing.atEnemy * Dice) - mainChar.def;
-
-      if (Dice == 0 || attFinal < 0){
-        attFinal = 0;
-        Console.WriteLine("Você bloqueou!");
+        if (comando == "atacar"){
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"Você desafiou o {GoblinKing.NameEnemy} para uma batalha.");
+            Thread.Sleep(1000);
+            Console.WriteLine("Ele aceitou.");
+        }
+        else{
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"Você tentou fugir saindo de fininho, mas o {GoblinKing.NameEnemy} viu você.");
+            Thread.Sleep(1000);
+            Console.WriteLine("O jeito vai ser lutar...");
+        }
+        Console.ResetColor();
+        Console.WriteLine($"A batalha vai começar.\nO {GoblinKing.NameEnemy} te dá a vantagem do primeiro turno.");
         Thread.Sleep(2000);
-      }
-      else{
-        GoblinKing.ataque(mainChar, Dice);
-      }
-      
-      //O mainChar ainda está vivo?
-      if (mainChar.vd <= 0){
-        Console.WriteLine("Você perdeu...");
-        break;
-      }
+
+        //HORA DA BATALHA:
+        for (int i = 1; i > 0; i++){
+            Console.Clear();
+
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($"##### ROUND {i} #####");
+            Console.ResetColor();
+            Thread.Sleep(2000);
+
+            //VEZ DO PLAYER:
+            Console.WriteLine("É o seu turno. O que você quer fazer?");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Atacar?");
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Defender?");
+            Console.ResetColor();
+
+            comando = Console.ReadLine().ToLower();
+
+            if (comando == "atacar"){
+                Console.WriteLine("Vamos jogar os dados. Pressione qualquer tecla para jogar os dados.");
+                Console.ReadKey();
+                
+                Dices.RollDice();
+                mainChar.Atacar(GoblinKing, Dices);
+
+                //O GOBLIN KING AINDA ESTÁ VIVO?
+                if (GoblinKing.HpEnemy == 0){
+                    Thread.Sleep(3000);
+                    Console.ForegroundColor = ConsoleColor.Magenta;
+                    Console.WriteLine($"Você venceu! O {GoblinKing.NameEnemy} está morto!");
+                    break;
+                }
+            }
+            else if (comando == "defender"){
+                Console.WriteLine("Vamos jogar os dados para ter uma boa defesa.");
+                Console.WriteLine("Pressione qualquer tecla para jogar os dados.");
+                Console.ReadKey();
+
+                Dices.RollDice();
+                mainChar.Defender(Dices);
+            }
+
+            //VEZ DO GOBLIN KING:
+            Thread.Sleep(1500);
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($"É a vez do {GoblinKing.NameEnemy} agora...");
+            Thread.Sleep(500);
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Ele vai atacar! Cuidado!");
+
+            GoblinKing.GoblinAttack(mainChar, Dices);
+            Console.ResetColor();
+
+            //O MAIN CHARACTER AINDA ESTÁ VIVO?
+            if (mainChar.Hp == 0){
+                Thread.Sleep(3000);
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine("Você morreu... Que chato.");
+                break;
+            }
+        }
     }
-  }
 }
